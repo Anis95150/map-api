@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<title>API</title>
+	<style>
+	.title1, .title2, .title3, .map1, #map, #map2 {
+		display: none;
+	}
+
+	.map1, #map, #map2 {
+		position: absolute;
+		left: 28%;
+		top: 20%;
+	}
+	
+	.title1, .title2, .title3 {
+		font-family: "Gabriola";
+		position: absolute;
+		left: 40%;
+		white-space: pre;
+	}
+
+	h2 {
+		font-family: "Gabriola";
+	}
+
+	#map, #map2 {
+		width: 50%;
+    	height: 80vh;
+	}
+
+	button {
+		color: white;
+		border-radius: 6px;
+		background: #C2A5E8;
+		width: 10%;
+		height: 5vh;
+		position: relative;
+		left: 28%;
+	}
+	
+	</style>
+</head>
+
+
+<body>
+	<button onclick="Exo1()">Exercice 1</button>
+	<button onclick="afficherMap()"> Exercice 2</button>
+	<button onclick="afficherMap2()">Exercice 3</button>
+	<button onclick="closeall()"> Close All</button>
+<!-- EXO 1 -->
+		<h2 class="title1">Exercice 1: Google Maps w/ iframe</h2>
+			<iframe class="map1" 
+				  width="600"
+				  height="450"
+				  frameborder="0" style="border:0"
+				  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCBpIzxlEYMzplAEy3ToSR-lYRYVHa4kHA
+				    &q=Epide,Margny-les-Compiègne+Oise" allowfullscreen>
+			</iframe>
+
+<!-- EXO 2 -->
+		<h2 class="title2">           Exercice 2: Google Maps w/ JS</h2>
+			<div id="map"></div>
+
+<!-- EXO 3 -->
+		<h2 class="title3">Exercice 3: List of under 1 euro Paris' Coffee Shop</h2>
+			<div id="map2"></div>
+
+	 
+	<script>
+// EXO 1
+		var h21 = document.querySelector('.title1');
+		var iframemap = document.querySelector('.map1');
+		var h22 = document.querySelector('.title2');
+		var carte = document.querySelector('#map');
+		var h23 = document.querySelector('.title3');
+		var carte2 = document.querySelector('#map2');
+
+
+		function Exo1() {
+			h21.style.display = "block";
+			iframemap.style.display = "block";
+			h22.style.display = "none";
+			carte.style.display = "none";
+			h23.style.display = "none";
+			carte2.style.display = "none";
+		}
+
+// EXO 2 & 3
+		function Carte() {
+			var latlng = new google.maps.LatLng(48.977674, 2.372309);
+
+		 	var option = {
+				center: latlng,
+				zoom: 18,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				scrollwheel: false
+			};
+
+			var map = new google.maps.Map(carte, option);
+
+
+			var marqueur = new google.maps.Marker({
+				position: latlng,
+				map: map,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				title: "Simplon.co Sarcelles"
+			});
+
+			var infos = '<div id="content">'+
+	            '<h2>Simplon Sarcelles</h2>'+
+	            '<div id="bodyContent">'+
+	            '<p>18 Avenue du 18 mai 1945, 95200 Sarcelles</p>'+
+	            '<p>06 02 72 77 82</p>'+
+	            '</div>'+
+	            '</div>';
+
+			var infobulle = new google.maps.InfoWindow({
+		         content: infos
+		    });
+
+			marqueur.addListener('mouseover', function() {
+				infobulle.open(map, marqueur);
+			});
+			
+		 }
+
+
+				
+		function Carte2() {
+			var latlng = new google.maps.LatLng(48.862725, 2.287592);
+
+		 	var option = {
+				center: latlng,
+				zoom: 11,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+			};
+
+			var map = new google.maps.Map(carte2, option);
+
+
+			var marqueurs = [
+				{latlong: {lat: 48.839512, lng: 2.303007}, adresse: '344 rue Vaugirard, 75015 Paris'},
+				{latlong: {lat: 48.876737, lng: 2.357601}, adresse: '5 rue d\'Alsace, 75010 Paris'},
+				{latlong: {lat: 48.850852, lng: 2.362029}, adresse: '6 boulevard Henri IV, 75004 Paris'},
+				{latlong: {lat: 48.850852, lng: 2.362029}, adresse: '53 rue du ruisseau, 75018 Paris'},
+				{latlong: {lat: 48.864655, lng: 2.350089}, adresse: '1 Passage du Grand Cerf, 75002 Paris'},
+				{latlong: {lat: 48.895825, lng: 2.339712}, adresse: '112 rue Championnet, 75018 Paris'}];
+
+			var infobulles = [
+				{nom: '<h2>Coffee Chop</h2>' + '<p>334 rue Vaugirard, 75015 Paris</p>'},
+				{nom: '<h2>Extérieur Quai</h2>' + '<p>5 rue d\'Alsace,75010</p>'},
+				{nom: '<h2>Le Sully</h2>' + '<p>6 boulevard Henri IV, 75004 Paris</p>'},
+				{nom: '<h2>O q de poule</h2>' + '<p>53 rue du ruisseau, 75018 Paris</p>'},
+				{nom: '<h2>Le Pas Sage</h2>' + '<p>1 Passage du Grand Cerf, 75002 Paris</p>'},
+				{nom: '<h2>La Rennaissance</h2>' + '<p>112 rue Championnet, 75018 Paris</p>'}];
+
+			for (var i = 0; i < marqueurs.length; i++) {
+				console.log(marqueurs[i]);
+
+				marqueurs[i] = new google.maps.Marker({
+					position: marqueurs[i].latlong,
+					map: map,
+					animation: google.maps.Animation.DROP,
+					title: marqueurs[i].adresse
+				});
+
+				infobulles[i] = new google.maps.InfoWindow({
+					content: infobulles[i].nom
+				})
+
+				marqueurs[i].addListener('mouseover', function(){
+					infobulles[this].open(map, marqueurs[this]);
+				}.bind(i))
+			}
+
+			var coordonnée = [
+			    {lat: 48.839512, lng: 2.303007},
+			    {lat: 48.876737, lng: 2.357601},
+			    {lat: 48.850852, lng: 2.362029},
+			    {lat: 48.850852, lng: 2.362029},
+			    {lat: 48.864655, lng: 2.350089},
+			    {lat: 48.895825, lng: 2.339712}];
+
+			var polyline = new google.maps.Polyline({
+			    path: coordonnée,
+			    geodesic: true,
+			    strokeColor: 'red',
+			    strokeOpacity: 1.0,
+			    strokeWeight: 2
+			  });
+
+ 			 polyline.setMap(map);
+		}
+
+
+		function Generique() {
+			Carte();
+			Carte2();
+		}
+
+		function afficherMap() {
+			h22.style.display = "block";
+			carte.style.display = "block";
+
+			h21.style.display = "none";
+			iframemap.style.display = "none";
+			h23.style.display = "none";
+			carte2.style.display = "none";
+		}
+
+		function afficherMap2() {
+			h23.style.display = "block";
+			carte2.style.display = "block";
+
+			h21.style.display = "none";
+			iframemap.style.display = "none";
+			h22.style.display = "none";
+			carte.style.display = "none";
+		}
+
+		function closeall() {
+			h21.style.display = "none";
+			iframemap.style.display = "none";
+			h22.style.display = "none";
+			carte.style.display = "none";
+			h23.style.display = "none";
+			carte2.style.display = "none";
+		}
+	</script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtfUmrxuvbxusui_fkWKCvDVX8K0dLgxI&callback=Generique"></script>
+
+</body>
+</html>
